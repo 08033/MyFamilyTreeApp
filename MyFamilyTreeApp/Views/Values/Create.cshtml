@@ -1,0 +1,97 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h1>Create</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            @*<form action="create" method="post">*@                
+                <label>First Name:</label>
+                <input type="text" class="form-control" id="txtfname" name="FirstName" />
+                <br />
+
+                <label>Last Name:</label>
+                <input type="text" class="form-control" id="txtlname" name="LastName" />
+                <br />
+
+                <label>Date of birth:</label>
+                <input type="date" class="form-control" id="txtdob" name="DateOfBirth" />
+                <br />
+
+                <label>Gender:</label>
+                <input type="radio" class="form-check-input" value="M" name="Gender" />Male
+                <input type="radio" class="form-check-input" value="F" name="Gender" />Female
+                <br />
+
+                <label>CNIC</label>
+                <input type="text" class="form-control" id="txtcnic" name="Cnic" />
+                <br />
+
+                <label>Father</label>
+                <select class="form-select" id="cbfather" name="Father">
+                    <option value="">Select</option>
+                    @foreach (Person fathrs in (IEnumerable<Person>)ViewData["fathers"])
+                    {
+                        <option value="@fathrs.Id">@fathrs.FirstName @fathrs.LastName</option>
+                    }
+                </select>
+                <br />
+
+                <label>Mother</label>
+                <select class="form-select" id="cbmother" name="Mother">
+                    <option value="">Select</option>
+                    @foreach (Person mothrs in (IEnumerable<Person>)ViewData["mothers"])
+                    {
+                        <option value="@mothrs.Id">@mothrs.FirstName @mothrs.LastName</option>
+                    }
+                </select>
+                <br />
+                
+                @*<input type="submit" class="btn btn-secondary" value="Save" />*@
+                <input type="button" class="btn btn-secondary" value="Save" onclick="clicked()" />
+           @* </form>*@
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function save() {
+        alert('save');
+    }
+
+    clicked = () => {
+        //const objClick = { title: "Hello", Description: "World" };
+        const objClick = { 
+            FirstName: $('#txtfname').val(),
+            LastName: $('#txtlname').val(),
+            DateOfBirth: $('#txtdob').val(),
+            Gender: $('input[name="Gender"]:checked').val(),
+            Cnic: $('#txtcnic').val(),
+            Father: $('#cbfather').val() ? $('#cbfather').val(): null,
+            Mother: $('#cbmother').val() ? $('#cbmother').val(): null
+        };
+
+        debugger;
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("create")',
+            data: JSON.stringify(objClick),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                console.log('data is:');
+                console.log(data);
+                alert("Data has been added successfully.");  
+                window.open('/Values');
+            },
+            error: function (msg) {
+                console.log('error msg:');
+                console.log(msg);
+                alert("Error while inserting data");
+            }
+        });
+    }
+</script>
